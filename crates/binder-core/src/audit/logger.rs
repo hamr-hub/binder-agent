@@ -128,18 +128,31 @@ impl AuditLogger {
                 intent_id: row.get(1)?,
                 actor: binder_schemas::audit::Actor {
                     user_id: row.get(2)?,
-                    role: serde_json::from_str(&format!("\"{}\"", row.get::<_, String>(3)?)).unwrap_or(binder_schemas::Role::User),
+                    role: {
+                        let role_str: String = row.get(3)?;
+                        serde_json::from_str(&format!("\"{}\"", role_str))
+                            .unwrap_or(binder_schemas::Role::User)
+                    },
                 },
                 intent_type: row.get(4)?,
                 target: binder_schemas::audit::AuditTarget {
-                    platform: serde_json::from_str(&format!("\"{}\"", row.get::<_, String>(5)?)).unwrap_or(binder_schemas::Platform::Linux),
+                    platform: {
+                        let p: String = row.get(5)?;
+                        serde_json::from_str(&format!("\"{}\"", p))
+                            .unwrap_or(binder_schemas::Platform::Linux)
+                    },
                     device_id: row.get(6)?,
                 },
                 capability_id: row.get(7)?,
                 capability_version: row.get(8)?,
-                policy_decision: serde_json::from_str(&format!("\"{}\"", row.get::<_, String>(9)?)).unwrap_or(binder_schemas::audit::PolicyDecision::Error),
+                policy_decision: {
+                    let pd: String = row.get(9)?;
+                    serde_json::from_str(&format!("\"{}\"", pd))
+                        .unwrap_or(binder_schemas::audit::PolicyDecision::Error)
+                },
                 policy_reason: row.get(10)?,
                 parameters: serde_json::Value::Null,
+                pre_state: None,
                 execution_result: binder_schemas::audit::ExecutionResult {
                     ok: row.get::<_, i32>(11)? != 0,
                     message: row.get(12)?,
@@ -148,10 +161,11 @@ impl AuditLogger {
                 },
                 verification_result: {
                     let verif_ok: Option<i32> = row.get(15)?;
+                    let diff_val: Option<String> = row.get(16)?;
                     verif_ok.map(|ok| binder_schemas::audit::VerificationResult {
                         ok: ok != 0,
                         observed: None,
-                        diff: row.get(16)?,
+                        diff: diff_val,
                     })
                 },
                 rollback: {
@@ -165,7 +179,9 @@ impl AuditLogger {
                 },
                 timestamp: {
                     let ts: String = row.get(19)?;
-                    chrono::DateTime::parse_from_rfc3339(&ts).unwrap().with_timezone(&chrono::Utc)
+                    chrono::DateTime::parse_from_rfc3339(&ts)
+                        .unwrap()
+                        .with_timezone(&chrono::Utc)
                 },
                 previous_hash: row.get(20)?,
                 hash: row.get(21)?,

@@ -39,7 +39,17 @@
         "file.read_confined",
         "file.write_confined",
         "ui.inspect",
-        "accessibility.permission.check"
+        "accessibility.permission.check",
+        "android.device.info",
+        "android.app.launch",
+        "android.app.force_stop",
+        "android.screen.click",
+        "android.screen.swipe",
+        "android.screen.screenshot",
+        "android.intent.start",
+        "android.input.text",
+        "android.device.battery",
+        "android.device.network"
       ]
     },
     "target": {

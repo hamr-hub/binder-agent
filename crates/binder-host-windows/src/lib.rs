@@ -12,7 +12,9 @@ pub struct WindowsAdapter;
 impl HostAdapter for WindowsAdapter {
     async fn describe_host(&self) -> Result<HostInfo, AdapterError> {
         Ok(HostInfo {
-            hostname: hostname::get()?.to_string_lossy().to_string(),
+            hostname: hostname::get()
+                .map(|h| h.to_string_lossy().to_string())
+                .unwrap_or_else(|_| "unknown".to_string()),
             os: "windows".into(),
             arch: std::env::consts::ARCH.to_string(),
             os_version: "unknown".into(),

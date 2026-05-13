@@ -1,7 +1,6 @@
 //! Capability Registry：管理所有注册的能力定义
 
-use binder_schemas::capability::{Capability, InMemoryRegistry};
-use std::collections::HashMap;
+use binder_schemas::capability::{Capability, CapabilityRegistry, InMemoryRegistry};
 
 pub struct Registry {
     inner: InMemoryRegistry,
@@ -31,10 +30,10 @@ impl Registry {
 
     /// 从 YAML 内容（可能包含多个文档）加载 Capability
     pub fn load_from_yaml(&mut self, content: &str) -> Result<(), Box<dyn std::error::Error>> {
+        use serde::Deserialize;
         for doc in serde_yaml::Deserializer::from_str(content) {
-            let capability: Capability = serde_yaml::from_value(
-                serde_yaml::Value::deserialize(doc)?
-            )?;
+            let value = serde_yaml::Value::deserialize(doc)?;
+            let capability: Capability = serde_yaml::from_value(value)?;
             self.inner.register(capability)?;
         }
         Ok(())
