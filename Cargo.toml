@@ -1,0 +1,85 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/binder-core",
+    "crates/binder-schemas",
+    "crates/binder-llm",
+    "crates/binder-host-linux",
+    "crates/binder-host-windows",
+    "crates/binder-host-darwin",
+    "crates/binder-host-browser",
+    "crates/binder-rpc",
+    "bin/binderd",
+    "bin/binderctl",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "TBD"
+repository = ""
+
+[workspace.dependencies]
+# Async runtime
+tokio = { version = "1", features = ["full"] }
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Schema validation
+jsonschema = "0.18"
+
+# SQLite
+rusqlite = { version = "0.31", features = ["bundled"] }
+
+# HTTP client
+reqwest = { version = "0.12", features = ["json"] }
+
+# CLI
+clap = { version = "4", features = ["derive"] }
+
+# Logging & tracing
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+
+# Error handling
+thiserror = "1"
+anyhow = "1"
+
+# UUID
+uuid = { version = "1", features = ["v4", "serde"] }
+
+# Time
+chrono = { version = "0.4", features = ["serde"] }
+
+# YAML
+serde_yaml = "0.9"
+
+# SHA hashing
+sha2 = "0.10"
+
+# JSON-RPC
+jsonrpsee = { version = "0.23", features = ["server", "client"] }
+
+# Unix socket (for Linux/macOS adapter RPC)
+tokio-util = { version = "0.7", features = ["codec"] }
+
+# Windows-specific (conditional)
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.56", features = [
+    "Win32_System_Com",
+    "Win32_UI_Accessibility",
+    "Win32_System_Ole",
+    "Win32_Foundation",
+] }
+
+# macOS-specific (conditional)
+[target.'cfg(target_os = "macos")'.dependencies]
+core-foundation = "0.9"
+
+# Profile for release
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1

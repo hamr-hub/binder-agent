@@ -1,0 +1,41 @@
+id: binder.capability.list
+version: 1
+description: 列出当前平台可用的所有 Capability。结果按 risk_level 分组。
+risk_level: read_only
+reversible: false
+requires_confirmation: false
+
+input_schema:
+  type: object
+  additionalProperties: false
+  properties:
+    filter_platform:
+      type: string
+      enum: [linux, windows, darwin, browser, android, ios]
+      description: 按平台过滤（可选，默认当前平台）
+    filter_risk:
+      type: string
+      enum: [read_only, low, medium, high, critical]
+      description: 按风险等级过滤（可选）
+
+supported_platforms:
+  - os: linux
+    arch: [amd64, arm64]
+  - os: windows
+    arch: [amd64, arm64]
+  - os: darwin
+    arch: [amd64, arm64]
+
+bindings:
+  linux:
+    adapter: binder-core
+    method: capability.list
+  windows:
+    adapter: binder-core
+    method: capability.list
+  darwin:
+    adapter: binder-core
+    method: capability.list
+
+rollback:
+  strategy: none

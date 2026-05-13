@@ -1,0 +1,39 @@
+id: system.info.get
+version: 1
+description: 获取当前系统基本信息：OS、架构、内核版本、hostname。
+risk_level: read_only
+reversible: false
+requires_confirmation: false
+
+input_schema:
+  type: object
+  additionalProperties: false
+  properties: {}
+
+supported_platforms:
+  - os: linux
+    arch: [amd64, arm64]
+  - os: windows
+    arch: [amd64, arm64]
+  - os: darwin
+    arch: [amd64, arm64]
+
+bindings:
+  linux:
+    adapter: binder-host-linux
+    method: system.info.get
+  windows:
+    adapter: binder-host-windows
+    method: system.info.get
+  darwin:
+    adapter: binder-host-darwin
+    method: system.info.get
+
+success_criteria:
+  - field: hostname
+    exists: true
+  - field: os
+    exists: true
+
+rollback:
+  strategy: none

@@ -1,0 +1,27 @@
+id: accessibility.permission.check
+version: 1
+description: 检查 macOS Accessibility 权限（TCC）是否已授予。
+risk_level: read_only
+reversible: false
+requires_confirmation: false
+
+input_schema:
+  type: object
+  additionalProperties: false
+  properties: {}
+
+supported_platforms:
+  - os: darwin
+    arch: [amd64, arm64]
+
+bindings:
+  darwin:
+    adapter: binder-host-darwin
+    method: accessibility.check_permission
+
+success_criteria:
+  - field: granted
+    exists: true
+
+rollback:
+  strategy: none

@@ -1,0 +1,37 @@
+id: binder.health.check
+version: 1
+description: 检查 Binder Core 健康状态，返回服务运行信息。
+risk_level: read_only
+reversible: false
+requires_confirmation: false
+
+input_schema:
+  type: object
+  additionalProperties: false
+  properties: {}
+
+supported_platforms:
+  - os: linux
+    arch: [amd64, arm64]
+  - os: windows
+    arch: [amd64, arm64]
+  - os: darwin
+    arch: [amd64, arm64]
+
+bindings:
+  linux:
+    adapter: binder-core
+    method: health.check
+  windows:
+    adapter: binder-core
+    method: health.check
+  darwin:
+    adapter: binder-core
+    method: health.check
+
+success_criteria:
+  - field: status
+    equals_value: "healthy"
+
+rollback:
+  strategy: none

@@ -1,0 +1,35 @@
+id: browser.fill_known_field
+version: 1
+description: 向页面预注册的表单字段填入值。不允许任意 selector。
+risk_level: medium
+reversible: true
+requires_confirmation: false
+
+input_schema:
+  type: object
+  required: [field_alias, value]
+  additionalProperties: false
+  properties:
+    field_alias:
+      type: string
+      description: 预注册的字段别名
+      enum:
+        - search_input
+        - username_input
+        - comment_input
+        - filter_input
+    value:
+      type: string
+      maxLength: 1000
+      description: 要填入的值
+
+supported_platforms:
+  - os: browser
+
+bindings:
+  browser:
+    adapter: binder-host-browser
+    method: browser.fill_field_by_alias
+
+rollback:
+  strategy: compensating_action

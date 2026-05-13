@@ -1,0 +1,34 @@
+id: browser.click_known_element
+version: 1
+description: 点击页面上预注册的已知元素。不允许传入任意 CSS selector。
+risk_level: medium
+reversible: true
+requires_confirmation: false
+
+input_schema:
+  type: object
+  required: [element_alias]
+  additionalProperties: false
+  properties:
+    element_alias:
+      type: string
+      description: 预注册的元素别名
+      enum:
+        - submit_button
+        - cancel_button
+        - next_page
+        - prev_page
+        - refresh_button
+        - logout_button
+
+supported_platforms:
+  - os: browser
+
+bindings:
+  browser:
+    adapter: binder-host-browser
+    method: browser.click_element_by_alias
+    verifier: browser.verify_element_state
+
+rollback:
+  strategy: compensating_action

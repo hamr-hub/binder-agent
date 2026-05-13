@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-intent-binder/schemas/capability.schema.json",
+  "title": "Capability",
+  "description": "Capability 注册定义。每个可执行动作必须在此注册。未注册的能力不可执行。",
+  "type": "object",
+  "required": [
+    "id",
+    "version",
+    "description",
+    "risk_level",
+    "reversible",
+    "requires_confirmation",
+    "input_schema",
+    "supported_platforms",
+    "bindings"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z_]+(\\.[a-z_]+)+$",
+      "description": "Capability 唯一 ID，格式: category.action"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Capability 版本号"
+    },
+    "description": {
+      "type": "string",
+      "description": "人类可读的能力描述"
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": ["read_only", "low", "medium", "high", "critical"],
+      "description": "风险等级：R0(只读) / R1(低风险) / R2(中风险) / R3(高风险) / R4(危险)"
+    },
+    "reversible": {
+      "type": "boolean",
+      "description": "是否可以回滚。不可回滚的能力需要强确认。"
+    },
+    "requires_confirmation": {
+      "type": "boolean",
+      "description": "执行前是否需要用户确认"
+    },
+    "input_schema": {
+      "type": "object",
+      "description": "此 Capability 的输入参数 JSON Schema 定义"
+    },
+    "supported_platforms": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["os"],
+        "additionalProperties": false,
+        "properties": {
+          "os": {
+            "type": "string",
+            "enum": ["android", "ios", "linux", "windows", "darwin", "browser"]
+          },
+          "arch": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["amd64", "arm64", "x86", "x86_64", "aarch64", "universal"]
+            }
+          }
+        }
+      }
+    },
+    "bindings": {
+      "type": "object",
+      "description": "各平台的 Adapter 绑定，key 为 os 名",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["adapter", "method"],
+        "additionalProperties": false,
+        "properties": {
+          "adapter": {
+            "type": "string",
+            "description": "适配器名称"
+          },
+          "method": {
+            "type": "string",
+            "description": "适配器方法名"
+          },
+          "verifier": {
+            "type": "string",
+            "description": "验证方法名（可选）"
+          },
+          "rollback": {
+            "type": "string",
+            "description": "回滚方法名（可选）"
+          }
+        }
+      }
+    },
+    "success_criteria": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "要检查的输出字段"
+          },
+          "equals_param": {
+            "type": "string",
+            "description": "应等于输入参数的哪个字段"
+          },
+          "equals_value": {
+            "description": "应等于的固定值"
+          },
+          "contains": {
+            "type": "string",
+            "description": "应包含的文本"
+          }
+        }
+      }
+    },
+    "rollback": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "strategy": {
+          "type": "string",
+          "enum": ["restore_previous_value", "compensating_action", "snapshot_restore", "none"],
+          "description": "回滚策略"
+        }
+      }
+    }
+  }
+}

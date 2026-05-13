@@ -1,0 +1,12 @@
+[package]
+name = "binder-rpc"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+async-trait = "0.1"
+thiserror.workspace = true
+jsonrpsee = { workspace = true, features = ["server", "client", "macros"] }
+tokio.workspace = true

@@ -1,0 +1,40 @@
+id: browser.open_url
+version: 1
+description: 通过预定义的 url_alias 打开浏览器页面。不允许直接传入裸 URL。
+risk_level: medium
+reversible: true
+requires_confirmation: false
+
+input_schema:
+  type: object
+  required: [url_alias]
+  additionalProperties: false
+  properties:
+    url_alias:
+      type: string
+      description: 预定义的 URL 别名
+      enum:
+        - project_dashboard
+        - helpdesk_console
+        - internal_docs
+        - monitor_dashboard
+        - meeting_room
+
+supported_platforms:
+  - os: browser
+
+bindings:
+  browser:
+    adapter: binder-host-browser
+    method: browser.open_url_by_alias
+    verifier: browser.verify_url
+    rollback: browser.close_tab
+
+success_criteria:
+  - field: page.url_alias
+    equals_param: url_alias
+  - field: page.loaded
+    equals_value: true
+
+rollback:
+  strategy: compensating_action

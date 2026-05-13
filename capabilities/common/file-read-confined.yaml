@@ -1,0 +1,44 @@
+id: file.read_confined
+version: 1
+description: 在受限路径白名单内读取文件内容。只能读取预定义的允许路径。
+risk_level: low
+reversible: true
+requires_confirmation: false
+
+input_schema:
+  type: object
+  required: [path]
+  additionalProperties: false
+  properties:
+    path:
+      type: string
+      description: 文件路径，必须在白名单内
+      examples:
+        - /var/log/binder/audit.log
+        - /etc/binder/config.yaml
+
+supported_platforms:
+  - os: linux
+    arch: [amd64, arm64]
+  - os: windows
+    arch: [amd64, arm64]
+  - os: darwin
+    arch: [amd64, arm64]
+
+bindings:
+  linux:
+    adapter: binder-host-linux
+    method: file.read
+  windows:
+    adapter: binder-host-windows
+    method: file.read
+  darwin:
+    adapter: binder-host-darwin
+    method: file.read
+
+success_criteria:
+  - field: content
+    exists: true
+
+rollback:
+  strategy: none

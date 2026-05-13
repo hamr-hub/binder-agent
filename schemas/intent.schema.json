@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-intent-binder/schemas/intent.schema.json",
+  "title": "Intent",
+  "description": "AI Intent Binder 的 LLM 意图输出结构。LLM 只能输出此结构，不能输出可执行命令。",
+  "type": "object",
+  "required": [
+    "intent_id",
+    "intent_type",
+    "target",
+    "parameters",
+    "risk_hint",
+    "confidence"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "intent_id": {
+      "type": "string",
+      "description": "意图唯一标识，UUID v4"
+    },
+    "intent_type": {
+      "type": "string",
+      "description": "意图类型，必须是预注册的 Capability ID",
+      "enum": [
+        "binder.capability.list",
+        "binder.health.check",
+        "system.info.get",
+        "system.network.status",
+        "system.service.status",
+        "system.process.list",
+        "app.open",
+        "app.close",
+        "device.audio.set_volume",
+        "device.display.set_brightness",
+        "browser.open_url",
+        "browser.verify_text",
+        "browser.click_known_element",
+        "browser.fill_known_field",
+        "file.read_confined",
+        "file.write_confined",
+        "ui.inspect",
+        "accessibility.permission.check"
+      ]
+    },
+    "target": {
+      "type": "object",
+      "required": ["platform", "device_id"],
+      "additionalProperties": false,
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": ["android", "ios", "linux", "windows", "darwin", "browser"]
+        },
+        "device_id": {
+          "type": "string",
+          "description": "设备标识，本地设备为 'local'"
+        }
+      }
+    },
+    "parameters": {
+      "type": "object",
+      "description": "意图参数，由对应 Capability 的 input_schema 二次校验"
+    },
+    "risk_hint": {
+      "type": "string",
+      "description": "LLM 对风险的初步判断，仅供参考，不决定最终授权",
+      "enum": ["read_only", "low", "medium", "high", "critical"]
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "LLM 置信度，仅供调试参考"
+    },
+    "needs_clarification": {
+      "type": "boolean",
+      "description": "是否需要向用户追问澄清参数"
+    },
+    "clarification_question": {
+      "type": "string",
+      "description": "澄清问题文本"
+    },
+    "natural_language_reason": {
+      "type": "string",
+      "description": "自然语言解释为什么选择此意图"
+    }
+  }
+}

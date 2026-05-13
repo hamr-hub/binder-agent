@@ -1,0 +1,123 @@
+id: app.open
+version: 1
+description: 打开指定的应用程序（Windows/macOS）。
+risk_level: low
+reversible: true
+requires_confirmation: false
+
+input_schema:
+  type: object
+  required: [app_name]
+  additionalProperties: false
+  properties:
+    app_name:
+      type: string
+      description: 预注册的 App 名称
+      enum:
+        - calculator
+        - notepad
+        - terminal
+        - browser
+        - file_explorer
+        - settings
+        - calendar
+        - email_client
+
+supported_platforms:
+  - os: windows
+    arch: [amd64, arm64]
+  - os: darwin
+    arch: [amd64, arm64]
+
+bindings:
+  windows:
+    adapter: binder-host-windows
+    method: app.open
+    verifier: app.is_running
+    rollback: app.close
+  darwin:
+    adapter: binder-host-darwin
+    method: app.open
+    verifier: app.is_running
+    rollback: app.close
+
+success_criteria:
+  - field: app_running
+    equals_value: true
+
+rollback:
+  strategy: compensating_action
+---
+id: app.close
+version: 1
+description: 关闭指定的应用程序（Windows/macOS）。
+risk_level: low
+reversible: true
+requires_confirmation: false
+
+input_schema:
+  type: object
+  required: [app_name]
+  additionalProperties: false
+  properties:
+    app_name:
+      type: string
+      enum:
+        - calculator
+        - notepad
+        - terminal
+        - browser
+        - file_explorer
+        - settings
+        - calendar
+        - email_client
+
+supported_platforms:
+  - os: windows
+    arch: [amd64, arm64]
+  - os: darwin
+    arch: [amd64, arm64]
+
+bindings:
+  windows:
+    adapter: binder-host-windows
+    method: app.close
+    verifier: app.is_running
+    rollback: app.open
+  darwin:
+    adapter: binder-host-darwin
+    method: app.close
+    verifier: app.is_running
+    rollback: app.open
+
+rollback:
+  strategy: compensating_action
+---
+id: ui.inspect
+version: 1
+description: 检查当前前台窗口的 UI 元素树（Windows UI Automation）。
+risk_level: read_only
+reversible: false
+requires_confirmation: false
+
+input_schema:
+  type: object
+  additionalProperties: false
+  properties:
+    max_depth:
+      type: integer
+      minimum: 1
+      maximum: 10
+      default: 3
+
+supported_platforms:
+  - os: windows
+    arch: [amd64, arm64]
+
+bindings:
+  windows:
+    adapter: binder-host-windows
+    method: ui.inspect
+
+rollback:
+  strategy: none

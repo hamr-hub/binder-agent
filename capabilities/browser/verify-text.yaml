@@ -1,0 +1,31 @@
+id: browser.verify_text
+version: 1
+description: 验证当前浏览器页面是否包含指定文本。
+risk_level: read_only
+reversible: true
+requires_confirmation: false
+
+input_schema:
+  type: object
+  required: [text]
+  additionalProperties: false
+  properties:
+    text:
+      type: string
+      minLength: 1
+      description: 要验证的文本内容
+
+supported_platforms:
+  - os: browser
+
+bindings:
+  browser:
+    adapter: binder-host-browser
+    method: browser.verify_text
+
+success_criteria:
+  - field: text_found
+    equals_value: true
+
+rollback:
+  strategy: none

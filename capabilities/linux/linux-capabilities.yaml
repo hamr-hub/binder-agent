@@ -1,0 +1,100 @@
+id: system.network.status
+version: 1
+description: 查询 Linux 系统网络接口状态：接口名、IP 地址、状态。
+risk_level: read_only
+reversible: false
+requires_confirmation: false
+
+input_schema:
+  type: object
+  additionalProperties: false
+  properties:
+    interface:
+      type: string
+      description: 指定接口名（可选，默认返回所有接口）
+
+supported_platforms:
+  - os: linux
+    arch: [amd64, arm64]
+
+bindings:
+  linux:
+    adapter: binder-host-linux
+    method: network.status
+
+success_criteria:
+  - field: interfaces
+    exists: true
+
+rollback:
+  strategy: none
+---
+id: system.service.status
+version: 1
+description: 查询 systemd 服务状态：active/inactive/failed。
+risk_level: read_only
+reversible: false
+requires_confirmation: false
+
+input_schema:
+  type: object
+  required: [service_name]
+  additionalProperties: false
+  properties:
+    service_name:
+      type: string
+      pattern: "^[a-zA-Z0-9_\\-]+$"
+      description: systemd 服务名称
+
+supported_platforms:
+  - os: linux
+    arch: [amd64, arm64]
+
+bindings:
+  linux:
+    adapter: binder-host-linux
+    method: service.status
+
+success_criteria:
+  - field: status
+    exists: true
+
+rollback:
+  strategy: none
+---
+id: system.process.list
+version: 1
+description: 列出系统进程：PID、名称、CPU/内存使用。
+risk_level: read_only
+reversible: false
+requires_confirmation: false
+
+input_schema:
+  type: object
+  additionalProperties: false
+  properties:
+    filter_name:
+      type: string
+      description: 按进程名过滤（可选）
+    limit:
+      type: integer
+      minimum: 1
+      maximum: 100
+      default: 20
+      description: 最大返回数量
+
+supported_platforms:
+  - os: linux
+    arch: [amd64, arm64]
+
+bindings:
+  linux:
+    adapter: binder-host-linux
+    method: process.list
+
+success_criteria:
+  - field: processes
+    exists: true
+
+rollback:
+  strategy: none

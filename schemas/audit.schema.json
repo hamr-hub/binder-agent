@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-intent-binder/schemas/audit.schema.json",
+  "title": "AuditRecord",
+  "description": "每次 Intent 执行的完整审计记录。Append-only，不可修改，通过 hash chain 保证完整性。",
+  "type": "object",
+  "required": [
+    "audit_id",
+    "intent_id",
+    "actor",
+    "intent_type",
+    "target",
+    "capability_id",
+    "policy_decision",
+    "parameters",
+    "execution_result",
+    "timestamp",
+    "hash"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "audit_id": {
+      "type": "string",
+      "description": "审计记录唯一 ID，UUID v4"
+    },
+    "intent_id": {
+      "type": "string",
+      "description": "关联的 Intent ID"
+    },
+    "actor": {
+      "type": "object",
+      "required": ["user_id", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "description": "发起操作的用户 ID"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["user", "operator", "admin", "device_owner"],
+          "description": "用户角色"
+        }
+      }
+    },
+    "intent_type": {
+      "type": "string",
+      "description": "Intent 类型"
+    },
+    "target": {
+      "type": "object",
+      "required": ["platform", "device_id"],
+      "additionalProperties": false,
+      "properties": {
+        "platform": {
+          "type": "string",
+          "description": "目标平台"
+        },
+        "device_id": {
+          "type": "string",
+          "description": "目标设备 ID"
+        }
+      }
+    },
+    "capability_id": {
+      "type": "string",
+      "description": "执行的 Capability ID"
+    },
+    "capability_version": {
+      "type": "integer",
+      "description": "Capability 版本号"
+    },
+    "policy_decision": {
+      "type": "string",
+      "enum": ["allow", "deny", "confirm", "error"],
+      "description": "策略决定"
+    },
+    "policy_reason": {
+      "type": "string",
+      "description": "策略决定的理由"
+    },
+    "pre_state": {
+      "type": "object",
+      "description": "执行前状态快照"
+    },
+    "parameters": {
+      "type": "object",
+      "description": "执行的参数"
+    },
+    "execution_result": {
+      "type": "object",
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "adapter": {
+          "type": "string"
+        },
+        "duration_ms": {
+          "type": "integer"
+        }
+      }
+    },
+    "verification_result": {
+      "type": "object",
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "observed": {
+          "type": "object"
+        },
+        "diff": {
+          "type": "string"
+        }
+      }
+    },
+    "rollback": {
+      "type": "object",
+      "properties": {
+        "attempted": {
+          "type": "boolean"
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 格式时间戳"
+    },
+    "previous_hash": {
+      "type": "string",
+      "description": "前一条审计记录的 SHA-256 hash"
+    },
+    "hash": {
+      "type": "string",
+      "description": "本条审计记录的 SHA-256 hash = SHA-256(previous_hash + record_data)"
+    }
+  }
+}
