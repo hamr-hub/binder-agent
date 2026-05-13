@@ -125,12 +125,17 @@ android-binder-agent/
 
 ## docs 目录索引
 
+`docs/` 目录为 GitHub Wiki 的 git submodule（指向 `binder-agent.wiki`）。
+
 | 文档 | 说明 |
 |------|------|
-| `docs/2026-05-13-PRD.md` | 完整方案文档：核心结论、架构设计、完整实现方案 |
-| `docs/prd.md` | 产品需求文档：定位、用户故事、验收标准 |
-| `docs/tech-solution.md` | 技术方案：架构、模块、状态机、序列图 |
-| `docs/api-protocol.md` | 接口协议：Intent/Capability/Audit/Adapter RPC Schema |
+| `docs/Home.md` | Wiki 首页 |
+| `docs/PRD.md` | 产品需求文档：定位、用户故事、验收标准 |
+| `docs/Tech-Solution.md` | 技术方案：架构、模块、状态机、序列图 |
+| `docs/API-Protocol.md` | 接口协议：Intent/Capability/Audit/Adapter RPC Schema |
+
+> clone 项目后需执行 `git submodule update --init` 拉取 docs（Wiki）内容，
+> 或使用 `git clone --recurse-submodules` 一次性拉取。
 
 ---
 
