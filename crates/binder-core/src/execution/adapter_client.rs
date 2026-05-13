@@ -1,0 +1,1 @@
+//! Adapter RPC 客户端：通过 JSON-RPC 连接 Host Adapter

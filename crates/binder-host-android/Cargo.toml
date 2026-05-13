@@ -1,5 +1,5 @@
 [package]
-name = "binder-host-darwin"
+name = "binder-host-android"
 version.workspace = true
 edition.workspace = true
 
@@ -14,6 +14,4 @@ thiserror.workspace = true
 anyhow.workspace = true
 tracing.workspace = true
 hostname.workspace = true
-
-[target.'cfg(target_os = "macos")'.dependencies]
-core-foundation = "0.9"
+chrono.workspace = true

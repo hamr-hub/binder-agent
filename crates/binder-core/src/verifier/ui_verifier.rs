@@ -1,0 +1,1 @@
+//! UI 验证器：检查 accessibility tree / UI tree

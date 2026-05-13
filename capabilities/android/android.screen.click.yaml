@@ -1,0 +1,38 @@
+id: android.screen.click
+version: 1
+description: 在 Android 屏幕的指定坐标点击。
+risk_level: medium_risk
+reversible: false
+requires_confirmation: true
+
+input_schema:
+  type: object
+  required:
+    - x
+    - y
+  additionalProperties: false
+  properties:
+    x:
+      type: integer
+      description: "屏幕 X 坐标"
+    y:
+      type: integer
+      description: "屏幕 Y 坐标"
+
+supported_platforms:
+  - os: linux
+    arch: [amd64, arm64]
+  - os: darwin
+    arch: [amd64, arm64]
+
+bindings:
+  android:
+    adapter: binder-host-android
+    method: screen.click
+
+success_criteria:
+  - field: clicked
+    equals: true
+
+rollback:
+  strategy: none

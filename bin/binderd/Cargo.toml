@@ -1,0 +1,23 @@
+[package]
+name = "binderd"
+version.workspace = true
+edition.workspace = true
+
+[[bin]]
+name = "binderd"
+path = "src/main.rs"
+
+[dependencies]
+binder-core = { path = "../../crates/binder-core" }
+binder-schemas = { path = "../../crates/binder-schemas" }
+binder-rpc = { path = "../../crates/binder-rpc" }
+binder-llm = { path = "../../crates/binder-llm" }
+
+serde.workspace = true
+serde_json.workspace = true
+serde_yaml.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+anyhow.workspace = true
+clap.workspace = true

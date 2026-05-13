@@ -7,6 +7,7 @@ members = [
     "crates/binder-host-linux",
     "crates/binder-host-windows",
     "crates/binder-host-darwin",
+    "crates/binder-host-android",
     "crates/binder-host-browser",
     "crates/binder-rpc",
     "bin/binderd",
@@ -62,21 +63,14 @@ sha2 = "0.10"
 # JSON-RPC
 jsonrpsee = { version = "0.23", features = ["server", "client"] }
 
+# Hostname
+hostname = "0.3"
+
+# Directory walking
+walkdir = "2"
+
 # Unix socket (for Linux/macOS adapter RPC)
 tokio-util = { version = "0.7", features = ["codec"] }
-
-# Windows-specific (conditional)
-[target.'cfg(windows)'.dependencies]
-windows = { version = "0.56", features = [
-    "Win32_System_Com",
-    "Win32_UI_Accessibility",
-    "Win32_System_Ole",
-    "Win32_Foundation",
-] }
-
-# macOS-specific (conditional)
-[target.'cfg(target_os = "macos")'.dependencies]
-core-foundation = "0.9"
 
 # Profile for release
 [profile.release]

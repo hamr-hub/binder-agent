@@ -1,0 +1,1 @@
+//! Capability Resolver：根据 intent_type + platform 解析具体执行绑定
