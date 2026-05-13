@@ -1,0 +1,41 @@
+id: android.intent.start
+version: 1
+description: 发送指定的 Android Intent（启动 Activity, Service 或 Broadcast）。
+risk_level: medium
+reversible: false
+requires_confirmation: true
+
+input_schema:
+  type: object
+  required:
+    - action
+  additionalProperties: false
+  properties:
+    action:
+      type: string
+      description: "Intent Action，例如 android.intent.action.VIEW"
+    data:
+      type: string
+      description: "Intent Data URI，例如 https://www.google.com"
+    component:
+      type: string
+      description: "组件名，例如 com.android.settings/.Settings"
+    extras:
+      type: object
+      description: "额外的键值对参数"
+
+supported_platforms:
+  - os: android
+    arch: [arm64, arm, x86_64, x86]
+
+bindings:
+  android:
+    adapter: binder-host-android
+    method: intent.start
+
+success_criteria:
+  - field: started
+    equals_value: true
+
+rollback:
+  strategy: none

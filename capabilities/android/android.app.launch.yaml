@@ -1,7 +1,7 @@
 id: android.app.launch
 version: 1
 description: 启动指定的 Android 应用程序（通过包名）。
-risk_level: low_risk
+risk_level: low
 reversible: true
 requires_confirmation: false
 
@@ -16,19 +16,19 @@ input_schema:
       description: "要启动的应用包名，例如 com.android.settings"
 
 supported_platforms:
-  - os: linux
-    arch: [amd64, arm64]
-  - os: darwin
-    arch: [amd64, arm64]
+  - os: android
+    arch: [arm64, arm, x86_64, x86]
 
 bindings:
   android:
     adapter: binder-host-android
     method: app.launch
+    verifier: app.is_running
+    rollback: app.force_stop
 
 success_criteria:
   - field: launched
-    equals: true
+    equals_value: true
 
 rollback:
-  strategy: stop_app
+  strategy: restore_previous_value

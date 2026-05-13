@@ -1,6 +1,6 @@
-id: android.device.info
+id: android.screen.screenshot
 version: 1
-description: 获取 Android 设备的基础信息（型号、版本、电池等）。
+description: 捕获当前屏幕截图。
 risk_level: read_only
 reversible: false
 requires_confirmation: false
@@ -11,18 +11,18 @@ input_schema:
   properties: {}
 
 supported_platforms:
-  - os: android
-    arch: [arm64, arm, x86_64, x86]
+  - os: linux
+    arch: [amd64, arm64]
+  - os: darwin
+    arch: [amd64, arm64]
 
 bindings:
   android:
     adapter: binder-host-android
-    method: device.get_info
+    method: screen.screenshot
 
 success_criteria:
-  - field: model
-    exists: true
-  - field: version
+  - field: screenshot_path
     exists: true
 
 rollback:

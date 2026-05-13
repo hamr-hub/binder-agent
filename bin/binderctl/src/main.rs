@@ -9,7 +9,6 @@
 //!   binderctl adapter status     - 查看 Adapter 状态
 
 use clap::{Parser, Subcommand};
-use binder_schemas::Platform;
 
 #[derive(Parser)]
 #[command(name = "binderctl")]

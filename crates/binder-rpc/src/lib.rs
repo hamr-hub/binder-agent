@@ -109,6 +109,70 @@ pub enum AdapterError {
     Timeout(String),
 }
 
+impl From<AdapterError> for jsonrpsee::types::error::ErrorObjectOwned {
+    fn from(err: AdapterError) -> Self {
+        jsonrpsee::types::error::ErrorObjectOwned::owned(
+            jsonrpsee::types::error::ErrorCode::InternalError.code(),
+            err.to_string(),
+            None::<()>,
+        )
+    }
+}
+
+use jsonrpsee::proc_macros::rpc;
+
+#[rpc(server, client)]
+pub trait HostAdapterRpc {
+    #[method(name = "describe_host")]
+    async fn describe_host(&self) -> Result<HostInfo, AdapterError>;
+
+    #[method(name = "list_capabilities")]
+    async fn list_capabilities(&self) -> Result<Vec<String>, AdapterError>;
+
+    #[method(name = "precheck")]
+    async fn precheck(
+        &self,
+        capability_id: String,
+        params: serde_json::Value,
+    ) -> Result<PrecheckResult, AdapterError>;
+
+    #[method(name = "snapshot")]
+    async fn snapshot(
+        &self,
+        capability_id: String,
+        params: serde_json::Value,
+    ) -> Result<Snapshot, AdapterError>;
+
+    #[method(name = "dry_run")]
+    async fn dry_run(
+        &self,
+        capability_id: String,
+        params: serde_json::Value,
+    ) -> Result<DryRunResult, AdapterError>;
+
+    #[method(name = "execute")]
+    async fn execute(
+        &self,
+        capability_id: String,
+        params: serde_json::Value,
+    ) -> Result<ExecuteResult, AdapterError>;
+
+    #[method(name = "verify")]
+    async fn verify(
+        &self,
+        capability_id: String,
+        params: serde_json::Value,
+        result: ExecuteResult,
+    ) -> Result<VerifyResult, AdapterError>;
+
+    #[method(name = "rollback")]
+    async fn rollback(
+        &self,
+        capability_id: String,
+        snapshot: Snapshot,
+    ) -> Result<RollbackResult, AdapterError>;
+}
+
 /// 所有平台 Host Adapter 必须实现的统一接口
 #[async_trait]
 pub trait HostAdapter: Send + Sync {

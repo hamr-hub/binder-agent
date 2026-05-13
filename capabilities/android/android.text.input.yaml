@@ -1,0 +1,34 @@
+id: android.text.input
+version: 1
+description: 在当前焦点输入框中输入文本。
+risk_level: medium_risk
+reversible: false
+requires_confirmation: true
+
+input_schema:
+  type: object
+  required:
+    - text
+  additionalProperties: false
+  properties:
+    text:
+      type: string
+      description: "要输入的文本内容"
+
+supported_platforms:
+  - os: linux
+    arch: [amd64, arm64]
+  - os: darwin
+    arch: [amd64, arm64]
+
+bindings:
+  android:
+    adapter: binder-host-android
+    method: text.input
+
+success_criteria:
+  - field: input_done
+    equals: true
+
+rollback:
+  strategy: none

@@ -76,14 +76,12 @@ impl IntentValidator {
 
     /// 校验 Intent JSON
     pub fn validate(&self, intent: &serde_json::Value) -> Result<(), Vec<String>> {
-        let mut errors = Vec::new();
-        for error in self.schema.iter_errors(intent) {
-            errors.push(format!("{}: {}", error.instance_path, error));
-        }
-        if errors.is_empty() {
-            Ok(())
+        let result = self.schema.validate(intent);
+        if let Err(errors) = result {
+            let messages: Vec<String> = errors.map(|e| format!("{}: {}", e.instance_path, e)).collect();
+            Err(messages)
         } else {
-            Err(errors)
+            Ok(())
         }
     }
 
